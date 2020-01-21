@@ -1,3 +1,8 @@
 {
-	"swap-cameras": true
+	"board":
+	{
+		"swap-left-and-right-cameras": false
+	},
+	"-pipeline-depth": true,
+	"-pipeline-ai": true
 }
