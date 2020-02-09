@@ -7,8 +7,11 @@ if not depthai.init_device(consts.resource_paths.device_cmd_fpath):
     print("Error initializing device. Try to reset it.")
     exit(1)
 
-# create the pipeline, establishing the first connection to the device
-p = depthai.create_pipeline(config={'streams': ['previewout']})
+# Create the pipeline using the 'previewout' stream, establishing the first connection to the device.
+p = depthai.create_pipeline(config={
+    'streams': ['previewout'],
+    'ai': {'blob_file': consts.resource_paths.blob_fpath}
+})
 
 if p is None:
     print('Error creating pipeline.')
@@ -20,8 +23,8 @@ while True:
     data_packets = p.get_available_data_packets()
 
     for packet in data_packets:
-        print(packet.stream_name)
-        elif packet.stream_name == 'previewout':
+        # By default, DepthAI adds other streams (notably 'meta_2dh'). Only process `previewout`.
+        if packet.stream_name == 'previewout':
             data = packet.getData()
             # the format of previewout image is CHW (Channel, Height, Width), but OpenCV needs HWC, so we
             # change shape (3, 300, 300) -> (300, 300, 3)
